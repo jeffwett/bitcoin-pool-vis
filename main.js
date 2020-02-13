@@ -223,6 +223,7 @@ $( document ).ready(function() {
         if (initial) {
           return 
         }
+        refreshMemPool()
         new_data.tx.forEach( (tx) => {
           removeFromMemPool(tx)
         });
