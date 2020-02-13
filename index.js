@@ -108,7 +108,12 @@ function refreshChainInfo() {
     });
 
     res.on('end', function(){
+      const oldHash = chainInfo.bestblockhash
       chainInfo = JSON.parse(body)
+      if (oldHash != null && oldHash != chainInfo.bestblockhash ) {
+        mempool = {}
+        refreshMempool() 
+      }
       refreshLastBlock()
     });
   }).on('error', function(e){
