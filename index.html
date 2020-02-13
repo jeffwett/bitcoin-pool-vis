@@ -18,5 +18,96 @@
     </div>
     <div id="info-target" class="info-target" style="background: white; position: fixed; padding: 10px; max-height: 300px; -webkit-overflow-scrolling: touch; max-width: 300px; overflow: scroll; overscroll-behavior: none">
     </div>
+        <div class="col-md-6 offset-md-3 text-center">
+          <br><br>
+          <h4 class="display-5">Visualization Explained</h4>
+          <p>Each square represents a transaction. Its area represents its virtual size in bytes and its color represents its "Fee Rate" in (sats/vB):<br>
+          </p>
+          <span class"label" style="padding: 5px; color: #ffffff; background: #00646e">1 sats/vB</span> -> 
+          <span class"label" style="padding: 5px; color: #ffffff; background: #00ff6e">15 sats/vB</span> -> 
+          <span class"label" style="padding: 5px; color: #ffffff; background: #640000">16 sats/vB</span> -> 
+          <span class"label" style="padding: 5px; color: #ffffff; background: #ff0000">50+ sats/vB</span> 
+          <br>
+          <br>
+          
+          <p>
+            As new transactions are added they initially appear with a dark blue border and with a large initial velocity so you can tell them apart. 
+          </p>
+          <p>
+            As new bitcoin blocks are mined their transactions are removed from the mempool as they are no longer pending. To showcase this a thick bright green border is added around the transactions for 10 seconds and then they are removed. Before they disappear take note of the colors and sizes that were selected.
+          </p>
+          <br>
+        </div>
+        <hr>
+        <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+          
+          
+          
+          <h1 class="display-4">Bitcoin Mempool</h1>
+          <p class="lead">The collection of verified transactions waiting to be added to blockchain (unconfirmed txs).</p>
+      </div>
+      <div class="col-md-6 offset-md-3 text-center">
+      <h4 class="display-5">TX Attributes</h4>
+      <p>A limited number of transactions can fit inside of the next block as each block must be < 1MB in size. Factors unique to each transaction in the pool include "Miners Fee Offered", "Amount Transacted", "Transaction Size", "Transaction Age", "Number of Inputs", "Number of Outputs", "Transaction Type", etc.
+      
+      </p>
+      <br>
+      <h4 class="display-5">Selecting Transactions</h4>
+      <p>Ultimately the bitcoin miners define their own prioritization rules as they select which transactions from the mempool to include in their block when they attempt to mine. Typically miners seek to maximize profits and with each transaction varying in size and reward they tend to prioritize:<br> <b>Miners Reward (sats) / Virtual Transaction Size (vB)</b>.</p>
+      <br>
+      <h4 class="display-5">Mining</h4>
+      <p>
+      In order for a block to be added to the block chain miners must (1) build a block containing valid transactions along with other metadata (2) solve a mathematical puzzle based on the constructed block before any other minor does so first. Each miner independently selects transactions from the mempool to include and does this process until some miner completes their puzzle first. Once the lucky miner succeeeds in solving their puzzle they broadcast the result to the network and all the miners update their blockchain (by adding the new block), their mempool state (removing transactions that were just included in the new block) and start the process over.</p>
+    </div>
+
+    <div class="container">
+      <div class="card-deck mb-3 text-center">
+        <div class="card mb-4 box-shadow">
+          <div class="card-header">
+            <h4 class="my-0 font-weight-normal">Size Per Block</h4>
+          </div>
+          <div class="card-body">
+            <h1 class="card-title pricing-card-title">1MB <small class="text-muted">/ block</small></h1>
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>1MB Size limit</li>
+              <li>4MB Theoretical maximum size</li>
+              <li>~2MB Realstic Maximum Size</li>
+              <li>* Depends on use of seg-wit and types of transactions included.</li>
+            </ul>
+            <button type="button" class="btn btn-lg btn-block btn-outline-primary">Sign up for free</button>
+          </div>
+        </div>
+        <div class="card mb-4 box-shadow">
+          <div class="card-header">
+            <h4 class="my-0 font-weight-normal">Last Block Mined At</h4>
+          </div>
+          <div class="card-body">
+            <h1 class="card-title pricing-card-title">$15 <small class="text-muted">/ mo</small></h1>
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>20 users included</li>
+              <li>10 GB of storage</li>
+              <li>Priority email support</li>
+              <li>Help center access</li>
+            </ul>
+            <button type="button" class="btn btn-lg btn-block btn-primary">Get started</button>
+          </div>
+        </div>
+        <div class="card mb-4 box-shadow">
+          <div class="card-header">
+            <h4 class="my-0 font-weight-normal">Mempool stats</h4>
+          </div>
+          <div class="card-body">
+            <h1 class="card-title pricing-card-title">$29 <small class="text-muted">/ mo</small></h1>
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>30 users included</li>
+              <li>15 GB of storage</li>
+              <li>Phone and email support</li>
+              <li>Help center access</li>
+            </ul>
+            <button type="button" class="btn btn-lg btn-block btn-primary">Contact us</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

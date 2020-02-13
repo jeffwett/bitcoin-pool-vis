@@ -157,7 +157,7 @@ $( document ).ready(function() {
         return b;
       }
       else {
-        mempool[key] = true
+        mempool[key] = data 
       }
       return false 
     }
@@ -290,34 +290,26 @@ $( document ).ready(function() {
       }
     })
   }
-
-  var initialX, initialY = null 
-  $('.vis-target').on('mousedown touchstart', function(event) {
-    initialX |= event.clientX || event.touches[0].clientX
-    initialY |= event.clientY || event.touches[0].clientY
-  })
-
+  var initialX,initialY;
+  Matter.Events.on(mConstraint, 'mousedown', function (event) {
+    initialX = event.mouse.position.x
+    initialY = event.mouse.position.y 
+  });
   //Add event with 'mousemove'
-  $(".vis-target").on("mouseup touchend", function (event) {
-    newX = event.clientX || event.touches[0].clientX
-    newY = event.clientY || event.touches[0].clientY
-    if (Math.abs(initialX - newX) > 20 || Math.abs(initialY - newY) > 20) { 
-      return;
-    }
-    initialY = initialX = null
+  Matter.Events.on(mConstraint, 'mouseup', function (event) {
     //For Matter.Query.point pass "array of bodies" and "mouse position"
+    if (Math.abs(event.mouse.position.x - initialX) > 10 || Math.abs(event.mouse.position.y - initialY) > 10)  
+      return;
     const bodies = Composite.allBodies(engine.world);  
-    x = newX 
-    y = newY 
-    var foundPhysics = Matter.Query.point(bodies, {x, y });
+    var foundPhysics = Matter.Query.point(bodies, event.mouse.position);
 
     if (foundPhysics[0]) {
       var active_mempool_id = body_id_to_mempool_id[foundPhysics[0].id]
       if (active_mempool_id) {
         data = mempool[active_mempool_id] 
         renderTransaction(active_mempool_id, data)
-        $('.info-target')[0].style.top = y - $('body')[0].scrollTop 
-        $('.info-target')[0].style.left = x - $('body')[0].scrollLeft
+        $('.info-target')[0].style.top = event.mouse.position.y - $('body')[0].scrollTop 
+        $('.info-target')[0].style.left = event.mouse.position.x - $('body')[0].scrollLeft
         $('.info-target').hide()
         makeAllBodiesStatic(true)
       }
@@ -350,7 +342,7 @@ $( document ).ready(function() {
       var index;
       var newObject; 
       var totalCount = Object.keys(mempool).length == 0 ? mempool_keys.length : Object.keys(mempool).length
-      var p_display = 1000 / totalCount * ( 1 + Math.log(dimHeight * dimWidth /(480*720))/Math.log(1.2)/10)
+      var p_display = 500 / totalCount * ( 1 + Math.log(dimHeight * dimWidth /(480*720))/Math.log(1.2)/10)
       console.log("P display value: " + p_display)
       for (index = 0; index < mempool_keys.length; index ++) {
         newObject = addToMemPool(mempool_keys[index], data[mempool_keys[index]], initial, p_display)
