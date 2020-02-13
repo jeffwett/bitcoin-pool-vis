@@ -50,12 +50,12 @@
         </div>
       <div class="col-md-6 offset-md-3 text-center">
       <h4 class="display-5">TX Attributes</h4>
-      <p>A limited number of transactions can fit inside of the next block as each block must be < 1MB in size. Factors unique to each transaction in the pool include "Miners Fee Offered", "Amount Transacted", "Transaction Size", "Transaction Age", "Number of Inputs", "Number of Outputs", "Transaction Type", etc.
+      <p>A limited number of transactions can fit inside of the next block as each block must be < 1MB in size. Thus even after a new block is mined the mempool will not be empty. Factors unique to each transaction include "Miners Fee Offered", "Amount Transacted", "Transaction Size", "Transaction Age", "Number of Inputs", "Number of Outputs", "Transaction Type", etc. Each transaction may possibly contain multiple inputs or UTOs (Unspent Transaction Outputs from prior confirmed transactions) and multiple transaction outputs. Transactions may also contain advanced scripts. Typically the more complex the transaction => the larger it is data size => high fee needed to get it included in a block.
       
       </p>
           <br><br>
       <h4 class="display-5">Selecting Transactions</h4>
-      <p>Ultimately the bitcoin miners define their own prioritization rules as they select which transactions from the mempool to include in their block when they attempt to mine. Typically miners seek to maximize profits. Since each transaction varies in size and reward they tend to prioritize:<br> <b>Miners Reward (sats) / Virtual Transaction Size (vB)</b>.</p>
+      <p>Ultimately the bitcoin miners define their own prioritization rules as they select which transactions to include in their block when attempting to mine. Typically miners seek to maximize profits and since each transaction varies in size and reward they tend to prioritize:<br> <b>Miners Reward (sats) / Virtual Transaction Size (vB)</b>.</p>
           <br><br>
       <h4 class="display-5">Mining</h4>
       <p>
