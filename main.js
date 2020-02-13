@@ -6,14 +6,14 @@ var Tx = function(tx_json, mempool_data) {
   this.outputs = tx_json.vout
   this.vsize = tx_json.vsize
   this.weight = tx_json.weight
-  this.total_sats = mempool_data.descendantfees 
+  this.total_sats = mempool_data.fee * 100_000_000
   this.time_in_mempool_minutes = Math.round(((new Date()).getTime() / 1000 - mempool_data.time)/60) 
   this.height = mempool_data.height 
   tx_json.vout.forEach( (tx_out) => {
     this.total_sats += tx_out.value * 100_000_000
   })
-  this.feerate = Math.round(mempool_data.descendantfees/this.vsize*100)/100 
-  this.total_fees = mempool_data.descendantfees
+  this.feerate = Math.round(mempool_data.fee * 100_000_000/this.vsize*100)/100 
+  this.total_fees = mempool_data.fee* 100_000_000
   this.fee_percent = Math.round(this.total_fees/this.total_sats*100_00)/100
 }
 
@@ -96,7 +96,7 @@ $( document ).ready(function() {
 
   setInterval(function(){ explosion(engine, [], 0.001, true) }, 10000);
   setInterval(removeConfirmedTransactions, 30000); 
-  removeConfirmedTransactions() 
+  removeConfirmedTransactions(true) 
   function colorForFeePerByte(fee_per_byte){
     if (fee_per_byte < 15){
       return "#00" + Math.min(100 + Math.floor(fee_per_byte * 10), 255).toString(16) + "6e" 
@@ -127,7 +127,7 @@ $( document ).ready(function() {
   }
   function addToMemPool(key, data, isInital, factor) {
     if (!(key in mempool)){
-      var fees_per_byte = data.descendantfees/data.descendantsize
+      var fees_per_byte = data.fee* 100_000_000/data.vsize
       if (Math.random() < factor) { 
         mempool[key] = data
         var size = Math.sqrt(data.descendantsize)/3
@@ -144,7 +144,7 @@ $( document ).ready(function() {
         b.frictionAir = 0.0
         b.friction = 0.0
         b.restitution = 0.7 
-        b.mass = data.descendantsize
+        b.mass = data.vsize
         b.render.lineWidth = 5
         b.render.strokeStyle = "#0000ff" 
         if (!isInital) {
@@ -197,8 +197,22 @@ $( document ).ready(function() {
     total_transacted -= total_reward
     $('#total').html(Math.round(total_transacted*100)/100 + " BTC")
   }
-  
-  function removeConfirmedTransactions() {
+ 
+  function updateMempoolInfo() {
+    const totalTransactions = Object.keys(mempool).length
+    $('#total-pending').html(totalTransactions)
+    var vsize = 0 
+    var fees = 0
+    var total = 0
+    Object.keys(mempool).forEach( (txid) => {
+      vsize += mempool[txid].vsize
+      fees += mempool[txid].fee
+    })
+    $('#mem-vsize').html(Math.round(vsize/1024/1024*1000)/1000 + " MB")
+    $('#mem-reward').html(Math.round(fees*100)/100 + " BTC")
+  }
+
+  function removeConfirmedTransactions(initial) {
     $.get("/best_block_txs.json", function(new_data, status){
       if (new_data.hash != bestHash) {
         console.log("BLOCK FOUND. checking new block against mempool")
@@ -206,11 +220,15 @@ $( document ).ready(function() {
         console.log(new_data.tx.length)
         bestBlockInfo = new_data.info
         updateLastBlockInfo()
+        if (initial) {
+          return 
+        }
         new_data.tx.forEach( (tx) => {
           removeFromMemPool(tx)
         });
       }
       else {
+        updateLastBlockInfo()
         console.log("No new block mined");
       }
     })
@@ -385,6 +403,7 @@ $( document ).ready(function() {
       if (toBeAdded.length > 0) {
         explosion(engine, newIds, 0.008)
       }
+      updateMempoolInfo()
       console.log("Added to mempool: " + toBeAdded.length)
     });
   
