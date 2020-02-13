@@ -62,49 +62,42 @@
 
     <div class="container">
       <div class="card-deck mb-3 text-center">
-        <div class="card mb-4 box-shadow">
+        <div class="card mb-6 box-shadow">
           <div class="card-header">
-            <h4 class="my-0 font-weight-normal">Size Per Block</h4>
+            <h4 class="my-0 font-weight-normal">Last Block</h4>
           </div>
           <div class="card-body">
-            <h1 class="card-title pricing-card-title">1MB <small class="text-muted">/ block</small></h1>
-            <ul class="list-unstyled mt-3 mb-4">
-              <li>1MB Size limit</li>
-              <li>4MB Theoretical maximum size</li>
-              <li>~2MB Realstic Maximum Size</li>
-              <li>* Depends on use of seg-wit and types of transactions included.</li>
-            </ul>
-            <button type="button" class="btn btn-lg btn-block btn-outline-primary">Sign up for free</button>
-          </div>
-        </div>
-        <div class="card mb-4 box-shadow">
-          <div class="card-header">
-            <h4 class="my-0 font-weight-normal">Last Block Mined At</h4>
-          </div>
-          <div class="card-body">
-            <h1 class="card-title pricing-card-title">$15 <small class="text-muted">/ mo</small></h1>
-            <ul class="list-unstyled mt-3 mb-4">
-              <li>20 users included</li>
-              <li>10 GB of storage</li>
-              <li>Priority email support</li>
-              <li>Help center access</li>
-            </ul>
-            <button type="button" class="btn btn-lg btn-block btn-primary">Get started</button>
-          </div>
-        </div>
-        <div class="card mb-4 box-shadow">
-          <div class="card-header">
-            <h4 class="my-0 font-weight-normal">Mempool stats</h4>
-          </div>
-          <div class="card-body">
-            <h1 class="card-title pricing-card-title">$29 <small class="text-muted">/ mo</small></h1>
-            <ul class="list-unstyled mt-3 mb-4">
-              <li>30 users included</li>
-              <li>15 GB of storage</li>
-              <li>Phone and email support</li>
-              <li>Help center access</li>
-            </ul>
-            <button type="button" class="btn btn-lg btn-block btn-primary">Contact us</button>
+            <small id="block-hash" class="card-title font-weight-bold">Loading...</small>
+              <table class="table table-striped">
+                <tr>
+                  <td>Height</td>
+                  <td id="height"></td>
+                </tr>
+                <tr>
+                  <td>Size</td>
+                  <td id="size"></td>
+                </tr>
+                <tr>
+                  <td>Virtual Size</td>
+                  <td id="vsize"></td>
+                </tr>
+                <tr>
+                  <td>Transactions</td>
+                  <td id="transactions"></td>
+                </tr>
+                <tr>
+                  <td>Time</td>
+                  <td id="time"></td>
+                </tr>
+                <tr>
+                  <td>Reward</td>
+                  <td id="reward"></td>
+                </tr>
+                <tr>
+                  <td>Total Transacted</td>
+                  <td id="total"></td>
+                </tr>
+              </table>
           </div>
         </div>
       </div>

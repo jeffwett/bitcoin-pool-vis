@@ -26,7 +26,7 @@ app.get('/best_block_txs.json', function(req, res) {
   //for (var id in mempool) {
   //  out.push(mempool[id].wtxid)
   //}
-  res.json({ tx: out, hash: chainInfo.bestblockhash })
+  res.json({ tx: out, hash: chainInfo.bestblockhash, info: bestBlockData })
 });
 app.get('/mempool.json', function(req, res) {
   res.json(mempool) 

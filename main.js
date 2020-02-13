@@ -96,7 +96,7 @@ $( document ).ready(function() {
 
   setInterval(function(){ explosion(engine, [], 0.001, true) }, 10000);
   setInterval(removeConfirmedTransactions, 30000); 
-  
+  removeConfirmedTransactions() 
   function colorForFeePerByte(fee_per_byte){
     if (fee_per_byte < 15){
       return "#00" + Math.min(100 + Math.floor(fee_per_byte * 10), 255).toString(16) + "6e" 
@@ -170,12 +170,42 @@ $( document ).ready(function() {
   var loading = null
   
   var bestHash = '' 
+  var bestBlockInfo = {} 
+  
+  function updateLastBlockInfo() {
+    const hash = bestBlockInfo.hash
+    $('#block-hash').html(hash)
+    const size = bestBlockInfo.strippedsize
+    $('#size').html(Math.round(size/1024/1024*1000)/1000 + " MB")
+    const height = bestBlockInfo.height
+    $('#height').html(height)
+    const transactions = bestBlockInfo.tx.length
+    $('#transactions').html(transactions)
+    const vsize = bestBlockInfo.size
+    $('#vsize').html(Math.round(vsize/1024/1024*1000)/1000 + " MB")
+    const time_in_mins_ago = Math.round(((new Date()).getTime() / 1000 - bestBlockInfo.time)/60) 
+    $('#time').html(time_in_mins_ago + " min ago")
+    var total_reward = bestBlockInfo.tx[0].vout[0].value
+    $('#reward').html(Math.round(total_reward*100)/100 + " BTC")
+    var total_transacted = 0
+    bestBlockInfo.tx.forEach((tx) => { 
+      tx.vout.forEach((vout) => {
+        if (vout.value)
+          total_transacted += vout.value
+      })
+    });
+    total_transacted -= total_reward
+    $('#total').html(Math.round(total_transacted*100)/100 + " BTC")
+  }
+  
   function removeConfirmedTransactions() {
     $.get("/best_block_txs.json", function(new_data, status){
       if (new_data.hash != bestHash) {
         console.log("BLOCK FOUND. checking new block against mempool")
         bestHash = new_data.hash
         console.log(new_data.tx.length)
+        bestBlockInfo = new_data.info
+        updateLastBlockInfo()
         new_data.tx.forEach( (tx) => {
           removeFromMemPool(tx)
         });
