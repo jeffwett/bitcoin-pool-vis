@@ -245,9 +245,9 @@ $( document ).ready(function() {
           <table class="table table-striped">
             <tr>
               <td>
-                ID
+                TXID
               </td>
-              <td>
+              <td style="word-wrap: break-word; max-width: 170;">
                 ${tx.txid}
               </td>
             </tr>
@@ -255,8 +255,8 @@ $( document ).ready(function() {
               <td>
                 Transacted 
               </td>
-              <td>
-                ${tx.total_sats / 100_000_000} BTC
+              <td >
+                ${Math.round(tx.total_sats) / 100_000_000} BTC
               </td>
             </tr>
             <tr>
@@ -391,7 +391,7 @@ $( document ).ready(function() {
       var index;
       var newObject; 
       var totalCount = Object.keys(mempool).length == 0 ? mempool_keys.length : Object.keys(mempool).length
-      var p_display = 500 / totalCount * ( 1 + Math.log(dimHeight * dimWidth /(480*720))/Math.log(1.2)/10)
+      var p_display = 300 / totalCount * ( 1 + Math.log(dimHeight * dimWidth /(480*720))/Math.log(1.2)/10)
       console.log("P display value: " + p_display)
       for (index = 0; index < mempool_keys.length; index ++) {
         newObject = addToMemPool(mempool_keys[index], data[mempool_keys[index]], initial, p_display)
