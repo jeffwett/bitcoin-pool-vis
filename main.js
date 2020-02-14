@@ -48,7 +48,7 @@ $( document ).ready(function() {
         width:  dimWidth,
         height: dimHeight,
         wireframes: false,
-        pixelRatio: 4
+        pixelRatio: window.devicePixelRatio 
       }
   });
   var b1 = Bodies.rectangle(dimWidth/2, 0, dimWidth, 40, { isStatic: true })
@@ -86,14 +86,6 @@ $( document ).ready(function() {
     };
 
     
-  $(window).scroll(function(event) {
-    //if (!event.target || event.target.id != "info-target") {
-    //  $('.info-target').hide() 
-    //  makeAllBodiesStatic(false)
-    //}
-  });
-
-
   setInterval(function(){ explosion(engine, [], 0.001, true) }, 10000);
   setInterval(removeConfirmedTransactions, 30000); 
   removeConfirmedTransactions(true) 
@@ -125,6 +117,9 @@ $( document ).ready(function() {
       }
     }
   }
+   $(document).on('scroll', function(e) {
+    console.log("called")
+   })
   function addToMemPool(key, data, isInital, factor) {
     if (!(key in mempool)){
       var fees_per_byte = data.fee* 100000000/data.vsize
@@ -165,8 +160,13 @@ $( document ).ready(function() {
     return false
   }
  
-   var mConstraint;
+   
+   
+  var mConstraint;
   mConstraint = MouseConstraint.create(engine);
+  mConstraint.mouse.element.removeEventListener("mousewheel", mConstraint.mouse.mousewheel);
+  mConstraint.mouse.element.removeEventListener("DOMMouseScroll", mConstraint.mouse.mousewheel);
+  
   Matter.World.add(engine.world, mConstraint);
   var loading = null
   
@@ -344,6 +344,7 @@ $( document ).ready(function() {
     initialX = event.mouse.position.x
     initialY = event.mouse.position.y 
   });
+ 
   //Add event with 'mousemove'
   Matter.Events.on(mConstraint, 'mouseup', function (event) {
     //For Matter.Query.point pass "array of bodies" and "mouse position"
