@@ -6,14 +6,14 @@ var Tx = function(tx_json, mempool_data) {
   this.outputs = tx_json.vout
   this.vsize = tx_json.vsize
   this.weight = tx_json.weight
-  this.total_sats = mempool_data.fee * 100_000_000
+  this.total_sats = mempool_data.fee * 100000000
   this.time_in_mempool_minutes = Math.round(((new Date()).getTime() / 1000 - mempool_data.time)/60) 
   this.height = mempool_data.height 
   tx_json.vout.forEach( (tx_out) => {
-    this.total_sats += tx_out.value * 100_000_000
+    this.total_sats += tx_out.value * 100000000
   })
-  this.feerate = Math.round(mempool_data.fee * 100_000_000/this.vsize*100)/100 
-  this.total_fees = mempool_data.fee* 100_000_000
+  this.feerate = Math.round(mempool_data.fee * 100000000/this.vsize*100)/100 
+  this.total_fees = mempool_data.fee* 100000000
   this.fee_percent = Math.round(this.total_fees/this.total_sats*100_00)/100
 }
 
@@ -127,7 +127,7 @@ $( document ).ready(function() {
   }
   function addToMemPool(key, data, isInital, factor) {
     if (!(key in mempool)){
-      var fees_per_byte = data.fee* 100_000_000/data.vsize
+      var fees_per_byte = data.fee* 100000000/data.vsize
       var tx_in_last_48_hours = (((new Date()).getTime() / 1000 - data.time)/60/48) < 1.0
       if (Math.random() < factor && tx_in_last_48_hours) { 
         mempool[key] = data
@@ -256,7 +256,7 @@ $( document ).ready(function() {
                 Transacted 
               </td>
               <td >
-                ${Math.round(tx.total_sats) / 100_000_000} BTC
+                ${Math.round(tx.total_sats) / 100000000} BTC
               </td>
             </tr>
             <tr>
@@ -264,7 +264,7 @@ $( document ).ready(function() {
                 Fee (Reward) Offered 
               </td>
               <td>
-                ${tx.total_fees / 100_000_000} BTC
+                ${tx.total_fees / 100000000} BTC
               </td>
             </tr>
             <tr>
