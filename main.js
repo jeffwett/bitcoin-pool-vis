@@ -51,10 +51,10 @@ $( document ).ready(function() {
         pixelRatio: 4
       }
   });
-  var b1 = Bodies.rectangle(dimWidth/2, 0, dimWidth, 30, { isStatic: true })
-  var b2 = Bodies.rectangle(dimWidth/2, dimHeight, dimWidth, 30, { isStatic: true })
-  var b3 = Bodies.rectangle(dimWidth, dimHeight/2, 30, dimHeight, { isStatic: true })
-  var b4 = Bodies.rectangle(0, dimHeight/2, 30, dimHeight , { isStatic: true })
+  var b1 = Bodies.rectangle(dimWidth/2, 0, dimWidth, 40, { isStatic: true })
+  var b2 = Bodies.rectangle(dimWidth/2, dimHeight, dimWidth, 40, { isStatic: true })
+  var b3 = Bodies.rectangle(dimWidth, dimHeight/2, 40, dimHeight, { isStatic: true })
+  var b4 = Bodies.rectangle(0, dimHeight/2, 40, dimHeight , { isStatic: true })
   b1.restitution = 1 
   b2.restitution = 1
   b3.restitution = 1 
