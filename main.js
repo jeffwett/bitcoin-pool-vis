@@ -128,9 +128,10 @@ $( document ).ready(function() {
   function addToMemPool(key, data, isInital, factor) {
     if (!(key in mempool)){
       var fees_per_byte = data.fee* 100_000_000/data.vsize
-      if (Math.random() < factor) { 
+      var tx_in_last_48_hours = (((new Date()).getTime() / 1000 - data.time)/60/48) < 1.0
+      if (Math.random() < factor && tx_in_last_48_hours) { 
         mempool[key] = data
-        var size = Math.sqrt(data.descendantsize)/3
+        var size = Math.sqrt(data.descendantsize)/2
         //var b= Bodies.polygon(Math.floor(Math.random() * 3200), Math.floor(Math.random() * 2400), 4, size, { 
         var b= Bodies.rectangle(Math.floor(Math.random() * dimWidth), Math.floor(Math.random() * dimHeight), size,size, { 
           render: {
@@ -391,7 +392,7 @@ $( document ).ready(function() {
       var index;
       var newObject; 
       var totalCount = Object.keys(mempool).length == 0 ? mempool_keys.length : Object.keys(mempool).length
-      var p_display = 300 / totalCount * ( 1 + Math.log(dimHeight * dimWidth /(480*720))/Math.log(1.2)/10)
+      var p_display = 500 / totalCount * ( 1 + Math.log(dimHeight * dimWidth /(480*720))/Math.log(1.2)/10)
       console.log("P display value: " + p_display)
       for (index = 0; index < mempool_keys.length; index ++) {
         newObject = addToMemPool(mempool_keys[index], data[mempool_keys[index]], initial, p_display)
