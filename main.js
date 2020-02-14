@@ -14,7 +14,7 @@ var Tx = function(tx_json, mempool_data) {
   })
   this.feerate = Math.round(mempool_data.fee * 100000000/this.vsize*100)/100 
   this.total_fees = mempool_data.fee* 100000000
-  this.fee_percent = Math.round(this.total_fees/this.total_sats*100_00)/100
+  this.fee_percent = Math.round(this.total_fees/this.total_sats*10000)/100
 }
 
 $( document ).ready(function() {
