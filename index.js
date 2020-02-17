@@ -9,6 +9,8 @@ const cron = require('node-cron');
 app.get('/', function (req, res) {
   res.sendFile(__dirname + '/index.html')
 });
+app.use(express.static('public'))
+
 app.get('/simulated_best_block_txs.json', function(req, res) {
   var out = []
   for (var id in mempool) {
@@ -123,7 +125,7 @@ function refreshChainInfo() {
 
 refreshMempool();
 refreshChainInfo()
-cron.schedule('* * * * *', () => { 
+cron.schedule('0,15,30,45 * * * * *', () => { 
   refreshMempool()
   refreshChainInfo()
 });

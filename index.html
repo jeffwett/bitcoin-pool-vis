@@ -27,6 +27,53 @@
           <hr>
           <br>
           <h4 class="display-5">Visualization Explained</h4>
+          
+         <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+							<ol class="carousel-indicators">
+								<li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+								<li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+								<li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+							</ol>
+							<div class="carousel-inner">
+								<div class="carousel-item active">
+									<div style="width:100%;height:400px; background: grey ;">
+										<img src="/images/screenshot.png">	
+										<div class="carousel-caption d-none d-md-block">
+											<h5>What's being visualized?</h5>
+											<p>Swipe to find out!</p>
+										</div>			
+									</div>	
+								</div>
+								<div class="carousel-item ">
+									<div style="width:100%;height:400px; background: grey ;">
+										<img src="/images/small.png">	
+										
+										<div class="carousel-caption d-none d-md-block">
+											<h5>Circles are <u>Unconfirmed Transactions</u></h5>
+											<p>These are valid transactions made by users that are not yet stored in a block onchain. Example transaction: Spend 1 BTC sending 0.25 to ADDRESS-1 and 0.74 to ADDRESS-2 leaving 0.01 as the miners fee.</p>
+										</div>			
+									</div>	
+								</div>
+								<div class="carousel-item ">
+									<div style="width:100%;height:400px; background: grey ;">
+										
+										<div class="carousel-caption d-none d-md-block">
+											<h5>What's being visualized?</h5>
+											<p>Swipe to find out!</p>
+										</div>			
+									</div>	
+								</div>
+							</div>
+							<a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+								<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+								<span class="sr-only">Previous</span>
+							</a>
+							<a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+								<span class="carousel-control-next-icon" aria-hidden="true"></span>
+								<span class="sr-only">Next</span>
+							</a>
+						</div> 
+          
           <p>Each square represents a transaction. Its area represents its virtual size in bytes and its color represents its "Fee Rate" in (sats/vB):<br>
           </p>
           <div class"label rounded-top" style="padding: 5px; color: #ffffff; background: #00646e">1 sat/vB</div>  

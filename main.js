@@ -51,18 +51,13 @@ $( document ).ready(function() {
         pixelRatio: window.devicePixelRatio 
       }
   });
-  var b1 = Bodies.rectangle(dimWidth/2, 0, dimWidth, 40, { isStatic: true })
   var b2 = Bodies.rectangle(dimWidth/2, dimHeight, dimWidth, 40, { isStatic: true })
-  var b3 = Bodies.rectangle(dimWidth, dimHeight/2, 40, dimHeight, { isStatic: true })
-  var b4 = Bodies.rectangle(0, dimHeight/2, 40, dimHeight , { isStatic: true })
-  b1.restitution = 1 
-  b2.restitution = 1
-  b3.restitution = 1 
-  b4.restitution = 1
+  var b3 = Bodies.rectangle(dimWidth, dimHeight*10/2, 40, dimHeight*10, { isStatic: true })
+  var b4 = Bodies.rectangle(0, dimHeight/2*10, 40, dimHeight*10, { isStatic: true })
   World.add(engine.world, [
-    b1,b2,b3,b4]);
-
-  engine.world.gravity.y = 0;
+    b2,b3,b4]);
+  
+  engine.world.gravity.y = 0.20
   // run the engine
   Engine.run(engine);
   // run the renderer
@@ -70,23 +65,23 @@ $( document ).ready(function() {
 
   var explosion = function(engine, newIds, power, all) {
         var bodies = Composite.allBodies(engine.world);
-        
-        for (var i = 0; i < bodies.length; i++) {
+				for (var i = 0; i < bodies.length; i++) {
             var body = bodies[i];
           
-            if (!body.isStatic && (all || newIds.includes(body.id))) {
+            /*if (!body.isStatic && (all || newIds.includes(body.id))) {
                 var forceMagnitude = (power || 0.004) * body.mass;
 
                 Body.applyForce(body, body.position, {
-                    x: (forceMagnitude + Common.random() * forceMagnitude) * Common.choose([1, -1]), 
-                    y: (forceMagnitude + Common.random() * forceMagnitude) * Common.choose([1, -1])
+                    x: (forceMagnitude + Common.random() * forceMagnitude), 
+                    y: (forceMagnitude + Common.random() * forceMagnitude)
                 });
             }
+            */
         }
     };
 
     
-  setInterval(function(){ explosion(engine, [], 0.001, true) }, 10000);
+  setInterval(function(){ explosion(engine, [], 0.002, true) }, 20000);
   setInterval(removeConfirmedTransactions, 30000); 
   removeConfirmedTransactions(true) 
   function colorForFeePerByte(fee_per_byte){
@@ -123,27 +118,27 @@ $( document ).ready(function() {
   function addToMemPool(key, data, isInital, factor) {
     if (!(key in mempool)){
       var fees_per_byte = data.fee* 100000000/data.vsize
-      var tx_in_last_48_hours = (((new Date()).getTime() / 1000 - data.time)/60/48) < 1.0
+      var tx_in_last_48_hours = (((new Date()).getTime() / 1000 - data.time)/60/60/48) < 1.0
       if (Math.random() < factor && tx_in_last_48_hours) { 
         mempool[key] = data
-        var size = Math.sqrt(data.descendantsize)/2
-        //var b= Bodies.polygon(Math.floor(Math.random() * 3200), Math.floor(Math.random() * 2400), 4, size, { 
-        var b= Bodies.rectangle(Math.floor(Math.random() * dimWidth), Math.floor(Math.random() * dimHeight), size,size, { 
+        var size = Math.sqrt(data.vsize)/2
+				var b= Bodies.circle(50 + 1.5*size + Math.floor(Math.random() * dimWidth - 100 - 1.5*size), (-1)*Common.random()*2000, size, { 
+        //var b= Bodies.rectangle(Math.floor(Math.random() * dimWidth), Math.floor(Math.random() * dimHeight), size,size, { 
           render: {
            fillStyle: colorForFeePerByte(fees_per_byte),
            strokeStyle: '#fff',
            lineWidth:1 
           }})
-        Body.setVelocity(b, { x: Common.choose([1, -1]), y: Common.choose([1,-1])})
+        Body.setVelocity(b, { x: Common.random()*10, y: 10 }) 
         body_id_to_mempool_id[b.id] = key
         mempool_id_to_body[key] = b
-        b.frictionAir = 0.0
-        b.friction = 0.0
-        b.restitution = 0.7 
-        b.mass = data.vsize
-        b.render.lineWidth = 5
+        //b.frictionAir = 0.10
+				b.friction = 0.10
+				b.restitution = 0.90 
+        b.mass = data.vsize / 10000
+				b.render.lineWidth = 5
         b.render.strokeStyle = "#0000ff" 
-        if (!isInital) {
+				if (!isInital) {
           setTimeout(function(){ b.render.lineWidth = 1; b.render.strokeStyle = "#fff" }, 10000);
         } 
         else {
@@ -383,6 +378,13 @@ $( document ).ready(function() {
     }
   }
 
+  var awaitingAdd = []
+
+  function addToWorld() {
+    World.add(engine.world, awaitingAdd)
+    awaitingAdd = []
+  }
+
   function refreshMemPool(initial) {
     console.log("Refreshing mempool")
     $.get("mempool.json", function(data, status){
@@ -392,26 +394,21 @@ $( document ).ready(function() {
       var index;
       var newObject; 
       var totalCount = Object.keys(mempool).length == 0 ? mempool_keys.length : Object.keys(mempool).length
-      var p_display = 500 / totalCount * ( 1 + Math.log(dimHeight * dimWidth /(480*720))/Math.log(1.2)/10)
+      var p_display = 0.25*( 1 + Math.log(dimHeight * dimWidth /(480*720))/Math.log(1.2)/10)
       console.log("P display value: " + p_display)
       for (index = 0; index < mempool_keys.length; index ++) {
         newObject = addToMemPool(mempool_keys[index], data[mempool_keys[index]], initial, p_display)
         if (newObject) {
-          toBeAdded.push(newObject)
+          awaitingAdd.push(newObject)
           newIds.push(newObject.id) 
         }
       }
-      World.add(engine.world, toBeAdded);
-      if (toBeAdded.length > 0) {
-        explosion(engine, newIds, 0.008)
-      }
+      addToWorld()
       updateMempoolInfo()
-      console.log("Added to mempool: " + toBeAdded.length)
     });
-  
   }
 
-  setInterval(refreshMemPool, 30000)
+  setInterval(refreshMemPool, 15000)
   refreshMemPool(true)
 
 })
