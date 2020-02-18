@@ -39,7 +39,7 @@ $( document ).ready(function() {
   // create an engine
   var engine = Engine.create();
   // create a renderer
-  var dimWidth = window.innerWidth-60;
+  var dimWidth = window.innerWidth-30;
   var dimHeight = window.innerHeight;
   var render = Render.create({
       element: $('.vis-target')[0], 
@@ -51,9 +51,9 @@ $( document ).ready(function() {
         pixelRatio: window.devicePixelRatio 
       }
   });
-  var b2 = Bodies.rectangle(dimWidth/2, dimHeight, dimWidth, 60, { isStatic: true })
-  var b3 = Bodies.rectangle(dimWidth+30, dimHeight*10/2, 60, dimHeight*10, { isStatic: true })
-  var b4 = Bodies.rectangle(-30, dimHeight/2*10, 60, dimHeight*10, { isStatic: true })
+  var b2 = Bodies.rectangle(dimWidth/2, dimHeight, dimWidth, 30, { isStatic: true })
+  var b3 = Bodies.rectangle(dimWidth+15, dimHeight*10/2, 30, dimHeight*10, { isStatic: true })
+  var b4 = Bodies.rectangle(-15, dimHeight/2*10, 30, dimHeight*10, { isStatic: true })
   b2.staticFriction = 0.75
   b3.staticFriction = 0.75
   b4.staticFriction = 0.75
