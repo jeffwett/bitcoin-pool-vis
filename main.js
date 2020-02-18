@@ -170,7 +170,7 @@ $( document ).ready(function() {
   
   function updateLastBlockInfo() {
     const hash = bestBlockInfo.hash
-    if (bestBlockInfo == null)
+    if (Object.keys(bestBlockInfo).length == 0)
       return
     $('#block-hash').html(hash)
     const size = bestBlockInfo.strippedsize
