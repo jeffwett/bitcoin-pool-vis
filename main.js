@@ -101,7 +101,18 @@ $( document ).ready(function() {
       }
     }
   }
-  
+  var btcPrice = null 
+  function updatePrice() {
+    $.get('/bitcoin_price.json', function(data, status) {
+      btcPrice = data.price
+      console.log("btc price " +  btcPrice)
+      updateLastBlockInfo()
+      updateMempoolInfo()
+    })
+  }
+
+  setTimeout(updatePrice, 2000);
+
   function addToMemPool(key, data, isInital, factor) {
     if (!(key in mempool)){
       var fees_per_byte = data.fee* 100000000/data.vsize
@@ -171,7 +182,7 @@ $( document ).ready(function() {
     const time_in_mins_ago = Math.round(((new Date()).getTime() / 1000 - bestBlockInfo.time)/60) 
     $('#time').html(time_in_mins_ago + " min ago")
     var total_reward = bestBlockInfo.tx[0].vout[0].value
-    $('#reward').html(Math.round(total_reward*100)/100 + " BTC")
+    $('#reward').html(Math.round(total_reward*100)/100 + " BTC (" + btcToDollars(total_reward) + ")")
     var total_transacted = 0
     bestBlockInfo.tx.forEach((tx) => { 
       tx.vout.forEach((vout) => {
@@ -180,7 +191,7 @@ $( document ).ready(function() {
       })
     });
     total_transacted -= total_reward
-    $('#total').html(Math.round(total_transacted*100)/100 + " BTC")
+    $('#total').html(Math.round(total_transacted*100)/100 + " BTC (" + btcToDollars(total_transacted) + ")" )
   }
  
   function updateMempoolInfo() {
@@ -194,7 +205,7 @@ $( document ).ready(function() {
       fees += mempool[txid].fee
     })
     $('#mem-vsize').html(Math.round(vsize/1024/1024*1000)/1000 + " MB")
-    $('#mem-reward').html(Math.round(fees*100)/100 + " BTC")
+    $('#mem-reward').html(Math.round(fees*100)/100 + " BTC (" + btcToDollars(fees) + ")")
   }
 
   function removeConfirmedTransactions(initial) {
@@ -223,6 +234,10 @@ $( document ).ready(function() {
       }
     })
   }
+ 
+  function btcToDollars(btc) {
+    return "$" + (Math.round(btc * btcPrice * 100)/100).toLocaleString()
+  }
   
   function renderTransaction(id, data) {
     loading = id
@@ -245,7 +260,7 @@ $( document ).ready(function() {
                 Transacted 
               </td>
               <td >
-                ${Math.round(tx.total_sats) / 100000000} BTC
+                ${Math.round(tx.total_sats) / 100000000} BTC (${btcToDollars(tx.total_sats / 100000000)})
               </td>
             </tr>
             <tr>
@@ -253,7 +268,7 @@ $( document ).ready(function() {
                 Fee (Reward) Offered 
               </td>
               <td>
-                ${tx.total_fees / 100000000} BTC
+                ${tx.total_fees / 100000000} BTC (${btcToDollars(tx.total_fees / 100000000)})
               </td>
             </tr>
             <tr>

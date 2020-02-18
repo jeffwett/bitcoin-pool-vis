@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var http = require('http');
+var https = require('https');
 const TxDecoder = require('./models/txdecoder') 
 
 const got = require('got');
@@ -22,6 +23,9 @@ app.get('/simulated_best_block_txs.json', function(req, res) {
   }
   res.json({ tx: out, hash: Math.random() + chainInfo.bestblockhash })
 });
+app.get('/bitcoin_price.json', function(req, res) {
+  res.json({ price: btc_price })
+})
 app.get('/best_block_hash.json', function(req, res) {
   //for (var id in mempool) {
   //  out.push(mempool[id].wtxid)
@@ -73,6 +77,22 @@ app.get('/matter.min.js', function (req, res) {
 });
 app.listen(3010, function () {
 });
+
+var btc_price = 9800
+function refreshPrice() {
+  https.get('https://api.pro.coinbase.com/products/BTC-USD/trades', function(res) {
+    var body = '';
+
+    res.on('data', function(chunk){
+        body += chunk;
+    });
+
+    res.on('end', function(){
+      const btc_price = JSON.parse(body)[0].price 
+      console.log(btc_price)
+    })
+  })
+}
 
 var mempool = {} 
 var chainInfo = {}
@@ -144,7 +164,11 @@ function refreshChainInfo() {
 
 refreshMempool();
 refreshChainInfo()
+refreshPrice()
 cron.schedule('0,15,30,45 * * * * *', () => { 
   refreshMempool()
   refreshChainInfo()
 });
+cron.schedule(' * * * * *', () => { 
+  refreshPrice()
+})
