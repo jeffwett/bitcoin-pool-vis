@@ -54,6 +54,9 @@ $( document ).ready(function() {
   var b2 = Bodies.rectangle(dimWidth/2, dimHeight, dimWidth, 40, { isStatic: true })
   var b3 = Bodies.rectangle(dimWidth, dimHeight*10/2, 40, dimHeight*10, { isStatic: true })
   var b4 = Bodies.rectangle(0, dimHeight/2*10, 40, dimHeight*10, { isStatic: true })
+  b2.staticFriction = 0.75
+  b3.staticFriction = 0.75
+  b4.staticFriction = 0.75
   World.add(engine.world, [
     b2,b3,b4]);
   
@@ -63,35 +66,21 @@ $( document ).ready(function() {
   // run the renderer
   Render.run(render);
 
-  var explosion = function(engine, newIds, power, all) {
-        var bodies = Composite.allBodies(engine.world);
-				for (var i = 0; i < bodies.length; i++) {
-            var body = bodies[i];
-          
-            /*if (!body.isStatic && (all || newIds.includes(body.id))) {
-                var forceMagnitude = (power || 0.004) * body.mass;
-
-                Body.applyForce(body, body.position, {
-                    x: (forceMagnitude + Common.random() * forceMagnitude), 
-                    y: (forceMagnitude + Common.random() * forceMagnitude)
-                });
-            }
-            */
-        }
-    };
-
-    
-  setInterval(function(){ explosion(engine, [], 0.002, true) }, 20000);
   setInterval(removeConfirmedTransactions, 30000); 
   removeConfirmedTransactions(true) 
   function colorForFeePerByte(fee_per_byte){
-    if (fee_per_byte < 15){
-      return "#00" + Math.min(100 + Math.floor(fee_per_byte * 10), 255).toString(16) + "6e" 
+    if (fee_per_byte < 25){
+      return "#00" + Math.min(50 + Math.floor(fee_per_byte * 6), 255).toString(16) + "6e" 
     }
     else  {
-      return "#" + Math.min(100 + Math.floor(fee_per_byte * 3), 255).toString(16) + "0000" 
+      return "#" + Math.min(100 + Math.floor((fee_per_byte - 25) * 3), 255).toString(16) + "0000" 
     }
   }
+  
+  function updateStatus(message) {
+    $('#vis-status-update').html(message)
+  }
+  
   function removePart2FromMemPool(txid) {
     var body = mempool_id_to_body[txid]
     Matter.Composite.remove(engine.world, body)
@@ -104,7 +93,7 @@ $( document ).ready(function() {
       if (body) {
         console.log("removing " + txid)
         body.render.lineWidth = 10 
-        body.render.strokeStyle = "#00ff00" 
+        body.render.strokeStyle = "#FF69B4" 
         setTimeout(function(){ removePart2FromMemPool(txid) }, 10000);
       }
       else {
@@ -121,9 +110,9 @@ $( document ).ready(function() {
       var tx_in_last_48_hours = (((new Date()).getTime() / 1000 - data.time)/60/60/48) < 1.0
       if (Math.random() < factor && tx_in_last_48_hours) { 
         mempool[key] = data
-        var size = Math.sqrt(data.vsize)/2
-				var b= Bodies.circle(50 + 1.5*size + Math.floor(Math.random() * dimWidth - 100 - 1.5*size), (-1)*Common.random()*2000, size, { 
-        //var b= Bodies.rectangle(Math.floor(Math.random() * dimWidth), Math.floor(Math.random() * dimHeight), size,size, { 
+        var size = Math.sqrt(data.vsize)*1.25
+				//var b= Bodies.circle(50 + 1.5*size + Math.floor(Math.random() * dimWidth - 100 - 1.5*size), (-1)*Common.random()*2000, size, { 
+        var b= Bodies.rectangle(50 + 1.5*size + Math.floor(Math.random() * dimWidth - 100 - 1.5*size), (-1)*Common.random()*dimHeight/4, size,size, { 
           render: {
            fillStyle: colorForFeePerByte(fees_per_byte),
            strokeStyle: '#fff',
@@ -133,11 +122,11 @@ $( document ).ready(function() {
         body_id_to_mempool_id[b.id] = key
         mempool_id_to_body[key] = b
         //b.frictionAir = 0.10
-				b.friction = 0.10
-				b.restitution = 0.90 
-        b.mass = data.vsize / 10000
-				b.render.lineWidth = 5
-        b.render.strokeStyle = "#0000ff" 
+				b.friction = 0.0
+				b.restitution = 1.0 
+				b.density = 0.1
+        b.render.lineWidth = 5
+        b.render.strokeStyle = "#ffaa1d" 
 				if (!isInital) {
           setTimeout(function(){ b.render.lineWidth = 1; b.render.strokeStyle = "#fff" }, 10000);
         } 
@@ -219,6 +208,7 @@ $( document ).ready(function() {
         if (initial) {
           return 
         }
+        updateStatus("New block mined!")
         new_data.tx.forEach( (tx) => {
           removeFromMemPool(tx)
         });
@@ -356,16 +346,13 @@ $( document ).ready(function() {
         $('.info-target')[0].style.top = event.mouse.position.y - $('body')[0].scrollTop 
         $('.info-target')[0].style.left = event.mouse.position.x - $('body')[0].scrollLeft
         $('.info-target').hide()
-        makeAllBodiesStatic(true)
       }
       else {
         $('.info-target').hide()
-        makeAllBodiesStatic(false)
       }
     }
     else {
       $('.info-target').hide()
-      makeAllBodiesStatic(false)
     }
   });
   
@@ -394,14 +381,20 @@ $( document ).ready(function() {
       var index;
       var newObject; 
       var totalCount = Object.keys(mempool).length == 0 ? mempool_keys.length : Object.keys(mempool).length
-      var p_display = 0.25*( 1 + Math.log(dimHeight * dimWidth /(480*720))/Math.log(1.2)/10)
+      var p_display = Math.max(0.15, 0.10*( 1 + Math.log(dimHeight * dimWidth /(480*720))/Math.log(1.2)/10))
       console.log("P display value: " + p_display)
+      var mempoolCount = 0
       for (index = 0; index < mempool_keys.length; index ++) {
+        if (!(mempool_keys[index] in mempool))
+          mempoolCount += 1
         newObject = addToMemPool(mempool_keys[index], data[mempool_keys[index]], initial, p_display)
         if (newObject) {
           awaitingAdd.push(newObject)
           newIds.push(newObject.id) 
         }
+      }
+      if (newIds.length > 0) {
+        updateStatus(mempoolCount + " transactions added to the mempool (" + awaitingAdd.length + " added to visual)" )
       }
       addToWorld()
       updateMempoolInfo()

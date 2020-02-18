@@ -2,6 +2,7 @@
   <head>
     <script src="./matter.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro&display=swap" rel="stylesheet">
     <script
       src="https://code.jquery.com/jquery-3.4.1.min.js"
       integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
@@ -14,61 +15,241 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
   <body>
+    <nav class="navbar bg-dark navbar-dark fixed-top">
+      <div class="navbar-brand text-middle" href="#">
+        <span class='h5'>Live Bitcoin Mempool Visual</span> 
+      </div>
+    </nav>
     <div class="vis-target">
     </div>
-        <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-          
-          
-         <br> 
-          <h1 class="display-4"><b>Bitcoin</b> Mempool</h1>
-          <p class="lead">The collection of verified transactions waiting to be added to the blockchain ("unconfirmed txs").</p>
-      </div>
+    <div class="status-update position-absolute p-2" style="top: 60px; right: 30px">
+      <span id="vis-status-update" class="text-muted" style:"font-family: 'Source Code Pro, monospace;'"> Loading...</span>
+    </div>
         <div class="col-md-6 offset-md-3 text-center">
           <hr>
           <br>
           <h4 class="display-5">Visualization Explained</h4>
           
-         <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+         <div id="carouselExampleIndicators" class="carousel slide  carousel-fade" data-ride="false" data-interval="10000">
 							<ol class="carousel-indicators">
 								<li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
 								<li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
 								<li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+								<li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
+								<li data-target="#carouselExampleIndicators" data-slide-to="4"></li>
+								<li data-target="#carouselExampleIndicators" data-slide-to="5"></li>
+								<li data-target="#carouselExampleIndicators" data-slide-to="6"></li>
+								<li data-target="#carouselExampleIndicators" data-slide-to="7"></li>
+								<li data-target="#carouselExampleIndicators" data-slide-to="8"></li>
+								<li data-target="#carouselExampleIndicators" data-slide-to="9"></li>
+								<li data-target="#carouselExampleIndicators" data-slide-to="10"></li>
 							</ol>
 							<div class="carousel-inner">
 								<div class="carousel-item active">
 									<div style="width:100%;height:400px; background: grey ;">
 										<img src="/images/screenshot.png">	
-										<div class="carousel-caption d-none d-md-block">
-											<h5>What's being visualized?</h5>
-											<p>Swipe to find out!</p>
+										<div class="carousel-caption d-md-block bg-dark rounded">
+											<h5>Background</h5>
+											<p>Swipe or click to learn more!</p>
 										</div>			
 									</div>	
 								</div>
 								<div class="carousel-item ">
-									<div style="width:100%;height:400px; background: grey ;">
-										<img src="/images/small.png">	
+									<div class="bg-dark" style="width:100%;height:400px;">
+										<img style='padding: 20px' src="/images/small.png">	
 										
-										<div class="carousel-caption d-none d-md-block">
-											<h5>Circles are <u>Unconfirmed Transactions</u></h5>
-											<p>These are valid transactions made by users that are not yet stored in a block onchain. Example transaction: Spend 1 BTC sending 0.25 to ADDRESS-1 and 0.74 to ADDRESS-2 leaving 0.01 as the miners fee.</p>
+										<div class="carousel-caption d-md-block">
+											<h5>Transaction: Inputs --> Ouputs </h5>
+											<p>Transactions take in one or more inputs and apportion them to one or more outputs. Digital signatures are provided to verify ownership over input funds. Outputs also include scripts which allow for more advanced "Smart Contracts". </p>
 										</div>			
 									</div>	
 								</div>
 								<div class="carousel-item ">
-									<div style="width:100%;height:400px; background: grey ;">
+									<div class="bg-dark" style="width:100%;height:400px;">
+										<img style='padding: 20px' src="/images/small.png">	
 										
-										<div class="carousel-caption d-none d-md-block">
-											<h5>What's being visualized?</h5>
-											<p>Swipe to find out!</p>
+										<div class="carousel-caption d-md-block">
+											<h5>Transaction Size (Bytes)</h5>
+											<p>Transactions vary in size depending on how many inputs and outputs they have and how complex the output scripts are.</p>
+										</div>			
+									</div>	
+								</div>
+								<div class="carousel-item ">
+									<div class="bg-dark" style="width:100%;height:400px;">
+										<img style='padding: 20px' src="/images/small.png">	
+										
+										<div class="carousel-caption d-md-block">
+											<h5>Bitcoin Blocks</h5>
+											<p>Blocks are mostly filled with transactions and may be up to 1 MB in size (~2000-4000 transactions).</p>
+										</div>			
+									</div>	
+								</div>
+								<div class="carousel-item ">
+									<div class="bg-dark" style="width:100%;height:400px;">
+										<img style='padding: 20px' src="/images/small.png">	
+										
+										<div class="carousel-caption d-md-block">
+											<h5>Unconfirmed vs. Confirmed transactions: Part 1</h5>
+											<p><b>Unconfirmed TX:</b> Valid transaction awaiting to be added to the blockchain.</p>
+										</div>			
+									</div>	
+								</div>
+								<div class="carousel-item ">
+									<div class="bg-dark" style="width:100%;height:400px;">
+										<img style='padding: 20px' src="/images/small.png">	
+										
+										<div class="carousel-caption d-md-block">
+											<h5>Unconfirmed vs. Confirmed transactions: Part 2</h5>
+                      <p><b>Confirmed TX:</b> On the blockchain. Typically you also specify how many confirmations it has (how many blocks deep it is in the chain.)</p>
+										</div>			
+									</div>	
+								</div>
+								<div class="carousel-item ">
+									<div class="bg-dark" style="width:100%;height:400px;">
+										<img style='padding: 20px' src="/images/small.png">	
+										
+										<div class="carousel-caption d-md-block">
+											<h5>Bitcoin Mining: Part 1</h5>
+											<p>Miners each independently create a block selecting users unconfirmed transactions and adding other metadata.</p>
+										</div>			
+									</div>	
+								</div>
+								<div class="carousel-item ">
+									<div class="bg-dark" style="width:100%;height:400px;">
+										<img style='padding: 20px' src="/images/small.png">	
+										
+										<div class="carousel-caption d-md-block">
+											<h5>Bitcoin Mining: Part 2</h5>
+											<p>The created blocks are not "mined" until the miner correctly guesses the answer to a unique puzzle. The difficulty of the puzzle is such that only 1 block is expected to mined by the entire network every 10 minutes.</p>
+										</div>			
+									</div>	
+								</div>
+								<div class="carousel-item ">
+									<div class="bg-dark" style="width:100%;height:400px;">
+										<img style='padding: 20px' src="/images/small.png">	
+										
+										<div class="carousel-caption d-md-block">
+											<h5>Bitcoin Mining: Part 3</h5>
+											<p>After a block is successfully mined, the miner shares it with the entire network and it added to the persisted blockchain. The miner receives all the miners fees along with a miners reward which as of today is 12.5 BTC. In April 2020 this reward will drop to 6.25 BTC.</p>
+										</div>			
+									</div>	
+								</div>
+								<div class="carousel-item ">
+									<div class="bg-dark" style="width:100%;height:400px;">
+										<img style='padding: 20px' src="/images/small.png">	
+										
+										<div class="carousel-caption d-md-block">
+											<h5>Transaction Fees: Part 1</h5>
+											<p>Transactions offer a miners fee which is set by the user creating the bitcoin transaction. The higher the fee provided the more likely miners are to include the transaction in the next block. Fee is reported in satoshis (sats) and there are 100,000,000 sats / BTC</p>
+										</div>			
+									</div>	
+								</div>
+								<div class="carousel-item ">
+									<div class="bg-dark" style="width:100%;height:400px;">
+										<img style='padding: 20px' src="/images/small.png">	
+										
+										<div class="carousel-caption d-md-block">
+											<h5>Transaction Fees: Part 2</h5>
+											<p> Since blocks are limited in size, the miners care more about the fee rate as it represents how much the transaction is paying for the space its taking up (miner fee / transaction data size).</p>
 										</div>			
 									</div>	
 								</div>
 							</div>
-							<a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+							<a class="carousel-control-prev" style=" background-color: rgba(245, 245, 245, 0.3); " href="#carouselExampleIndicators" role="button" data-slide="prev">
 								<span class="carousel-control-prev-icon" aria-hidden="true"></span>
 								<span class="sr-only">Previous</span>
 							</a>
-							<a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+							<a class="carousel-control-next" style=" background-color: rgba(245, 245, 245, 0.3);" href="#carouselExampleIndicators" role="button" data-slide="next">
+								<span class="carousel-control-next-icon" aria-hidden="true"></span>
+								<span class="sr-only">Next</span>
+							</a>
+						</div> 
+        <br><br><br> 
+         <div id="carouselExampleIndicatorsVis" class="carousel slide  carousel-fade" data-ride="false" data-interval="10000">
+							<ol class="carousel-indicators">
+								<li data-target="#carouselExampleIndicatorsVis" data-slide-to="0" class="active"></li>
+								<li data-target="#carouselExampleIndicatorsVis" data-slide-to="1"></li>
+								<li data-target="#carouselExampleIndicatorsVis" data-slide-to="2"></li>
+							</ol>
+							<div class="carousel-inner">
+								<div class="carousel-item active">
+									<div style="width:100%;height:400px; background: grey ;">
+										<img src="/images/screenshot.png">	
+										<div class="carousel-caption d-md-block bg-dark rounded">
+											<h5>About the visualization</h5>
+											<p>Swipe or click to learn more!</p>
+										</div>			
+									</div>	
+								</div>
+								<div class="carousel-item ">
+									<div class="bg-dark" style="width:100%;height:400px;">
+										<img style='padding: 20px' src="/images/small.png">	
+										
+										<div class="carousel-caption d-md-block">
+											<h5>Mempool Visualized</h5>
+											<p>The collection of valid unconfirmed transactions in the Bitcoin network is called the mempool. In the visual above you'll see the LIVE state of the current mempool as it grows and shrinks.</p>
+										</div>			
+									</div>	
+								</div>
+								<div class="carousel-item ">
+									<div class="bg-dark" style="width:100%;height:400px;">
+										<img style='padding: 20px' src="/images/small.png">	
+										
+										<div class="carousel-caption d-md-block">
+											<h5>Transactions</h5>
+											<p>Transactions are represented by squares and their size reflects the size of the transaction's data in bytes.</p>
+										</div>			
+									</div>	
+								</div>
+								<div class="carousel-item ">
+									<div class="bg-dark" style="width:100%;height:400px;">
+										<div class="carousel-caption d-md-block">
+											<h5>Transaction fee rate</h5>
+											<p>A transaction's color is defined by its fee rate. The higher the fee rate the more a miner gets paid per amount of space taken up by the transaction in a block.</p>
+                      <div class"label rounded-top" style="padding: 5px; color: #ffffff; background: #00386e">1 sat/vB</div>  
+                      <div class"label" style="padding: 5px; color: #fff; background: #00626e">8 sats/vB</div> 
+                      <div class"label" style="padding: 5px; color: #fff; background: #008c6e">15 sats/vB</div> 
+                      <div class"label" style="padding: 5px; color: #ffffff; background: #00c26e">24 sats/vB</div> 
+                      <div class"label" style="padding: 5px; color: #ffffff; background: #640000">25 sats/vB</div> 
+                      <div class"label rounded-bottom" style="padding: 5px; color: #ffffff; background: #fa0000">50+ sats/vB</div> 
+										</div>			
+									</div>	
+								</div>
+								<div class="carousel-item ">
+									<div class="bg-dark" style="width:100%;height:400px;">
+										<img style='padding: 20px' src="/images/small.png">	
+										
+										<div class="carousel-caption d-md-block">
+											<h5>New transactions</h5>
+											<p>New transactions are constantly being broadcasted across the network and are added to each node's mempool. When they are added in the visual, you'll see them drop in from the sky with a blue border.</p>
+										</div>			
+									</div>	
+								</div>
+								<div class="carousel-item ">
+									<div class="bg-dark" style="width:100%;height:400px;">
+										<img style='padding: 20px' src="/images/small.png">	
+										
+										<div class="carousel-caption d-md-block">
+											<h5>Mined Block: Part 1</h5>
+											<p>When a new block is mined it is broadcasted to the network of peer to peer full nodes. Those nodes save this block and then must remove the newly confirmed transactions from the mempool as they are no longer "unconfirmed". </p>
+										</div>			
+									</div>	
+								</div>
+								<div class="carousel-item ">
+									<div class="bg-dark" style="width:100%;height:400px;">
+										<img style='padding: 20px' src="/images/small.png">	
+										
+										<div class="carousel-caption d-md-block">
+											<h5>Mined Block: Part 2</h5>
+											<p>In the visual you'll see this as the transactions selected for the next block glow bright green and then disappear after a few seconds. Notice trends among what was selected and how the colors and sizes change after blocks are mined.</p>
+										</div>			
+									</div>	
+								</div>
+							<a class="carousel-control-prev" style=" background-color: rgba(245, 245, 245, 0.3); " href="#carouselExampleIndicatorsVis" role="button" data-slide="prev">
+								<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+								<span class="sr-only">Previous</span>
+							</a>
+							<a class="carousel-control-next" style=" background-color: rgba(245, 245, 245, 0.3); " href="#carouselExampleIndicatorsVis" role="button" data-slide="next">
 								<span class="carousel-control-next-icon" aria-hidden="true"></span>
 								<span class="sr-only">Next</span>
 							</a>
@@ -76,10 +257,14 @@
           
           <p>Each square represents a transaction. Its area represents its virtual size in bytes and its color represents its "Fee Rate" in (sats/vB):<br>
           </p>
-          <div class"label rounded-top" style="padding: 5px; color: #ffffff; background: #00646e">1 sat/vB</div>  
-          <div class"label" style="padding: 5px; color: #fff; background: #00ff6e">15 sats/vB</div> 
-          <div class"label" style="padding: 5px; color: #ffffff; background: #640000">16 sats/vB</div> 
-          <div class"label rounded-bottom" style="padding: 5px; color: #ffffff; background: #ff0000">50+ sats/vB</div> 
+            <h5>Transaction fee rate</h5>
+            <p>A transaction's color is defined by its fee rate. The higher the fee rate the more a miner gets paid per amount of space taken up by the transaction in a block.</p>
+            <div class"label rounded-top" style="padding: 5px; color: #ffffff; background: #00386e">1 sat/vB</div>  
+            <div class"label" style="padding: 5px; color: #fff; background: #00626e">8 sats/vB</div> 
+            <div class"label" style="padding: 5px; color: #fff; background: #008c6e">15 sats/vB</div> 
+            <div class"label" style="padding: 5px; color: #ffffff; background: #00c26e">24 sats/vB</div> 
+            <div class"label" style="padding: 5px; color: #ffffff; background: #640000">25 sats/vB</div> 
+            <div class"label rounded-bottom" style="padding: 5px; color: #ffffff; background: #fa0000">50+ sats/vB</div> 
           <br>
           <br>
           
@@ -93,23 +278,8 @@
           <hr>
           <br>
         </div>
-      <div class="col-md-6 offset-md-3 text-center">
-      <h4 class="display-5">TX Attributes</h4>
-      <p>A limited number of transactions can fit inside of the next block as each block must be < 1MB in size. Thus even after a new block is mined the mempool will not be empty. Factors unique to each transaction include "Miners Fee Offered", "Amount Transacted", "Transaction Size", "Transaction Age", "Number of Inputs", "Number of Outputs", "Transaction Type", etc. Each transaction may possibly contain multiple inputs or UTOs (Unspent Transaction Outputs from prior confirmed transactions) and multiple transaction outputs. Transactions may also contain advanced scripts. Typically the more complex the transaction => the larger it is data size => high fee needed to get it included in a block.
-      
-      </p>
-          <br><br>
-      <h4 class="display-5">Selecting Transactions</h4>
-      <p>Ultimately the bitcoin miners define their own prioritization rules as they select which transactions to include in their block when attempting to mine. Typically miners seek to maximize profits and since each transaction varies in size and reward they tend to prioritize:<br> <b>Miners Reward (sats) / Virtual Transaction Size (vB)</b>.</p>
-          <br><br>
-      <h4 class="display-5">Mining</h4>
-      <p>
-      In order to successfully mine a block and have it added to the Bitcoin Blockchain, a miner must (1) construct a block of valid transactions and other metadata (2) solve a mathematical puzzle corresponding to the generated block before any other minor does so first. While constructing a block miners independently select transactions from the mempool to include and repeatedly try and solve the corresonding puzzle until some miner solves their puzzle first. Once the 1st miner succeeeds in solving their puzzle they broadcast to the network and all the miners update their blockchain (by adding the new block), their mempool state (removing transactions that were just included in the new block) and start the process over.</p>
-    <br>
-    <hr>
-    <br>
+      </div>
     </div>
-
     <div class="container">
       <div class="card-deck mb-3 text-center">
         <div class="card mb-6 box-shadow">
