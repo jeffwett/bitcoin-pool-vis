@@ -39,7 +39,7 @@ $( document ).ready(function() {
   // create an engine
   var engine = Engine.create();
   // create a renderer
-  var dimWidth = window.innerWidth;
+  var dimWidth = window.innerWidth-60;
   var dimHeight = window.innerHeight;
   var render = Render.create({
       element: $('.vis-target')[0], 
@@ -51,9 +51,9 @@ $( document ).ready(function() {
         pixelRatio: window.devicePixelRatio 
       }
   });
-  var b2 = Bodies.rectangle(dimWidth/2, dimHeight, dimWidth, 40, { isStatic: true })
-  var b3 = Bodies.rectangle(dimWidth, dimHeight*10/2, 40, dimHeight*10, { isStatic: true })
-  var b4 = Bodies.rectangle(0, dimHeight/2*10, 40, dimHeight*10, { isStatic: true })
+  var b2 = Bodies.rectangle(dimWidth/2, dimHeight, dimWidth, 60, { isStatic: true })
+  var b3 = Bodies.rectangle(dimWidth+30, dimHeight*10/2, 60, dimHeight*10, { isStatic: true })
+  var b4 = Bodies.rectangle(-30, dimHeight/2*10, 60, dimHeight*10, { isStatic: true })
   b2.staticFriction = 0.75
   b3.staticFriction = 0.75
   b4.staticFriction = 0.75
@@ -92,8 +92,8 @@ $( document ).ready(function() {
       var body = mempool_id_to_body[txid]
       if (body) {
         console.log("removing " + txid)
-        body.render.lineWidth = 10 
-        body.render.strokeStyle = "#FF69B4" 
+        body.render.lineWidth = 7 
+        body.render.strokeStyle = "#8a2be2" 
         setTimeout(function(){ removePart2FromMemPool(txid) }, 10000);
       }
       else {
@@ -101,9 +101,7 @@ $( document ).ready(function() {
       }
     }
   }
-   $(document).on('scroll', function(e) {
-    console.log("called")
-   })
+  
   function addToMemPool(key, data, isInital, factor) {
     if (!(key in mempool)){
       var fees_per_byte = data.fee* 100000000/data.vsize
@@ -111,6 +109,8 @@ $( document ).ready(function() {
       if (Math.random() < factor && tx_in_last_48_hours) { 
         mempool[key] = data
         var size = Math.min(Math.sqrt(data.vsize)*1.25, dimWidth/2)
+        if (dimWidth < 1200)
+          size *= 0.75
 				//var b= Bodies.circle(50 + 1.5*size + Math.floor(Math.random() * dimWidth - 100 - 1.5*size), (-1)*Common.random()*2000, size, { 
         var b= Bodies.rectangle(50 + 1.5*size + Math.floor(Math.random() * dimWidth - 100 - 1.5*size), (-1)*Common.random()*dimHeight/4, size,size, { 
           render: {
@@ -147,10 +147,10 @@ $( document ).ready(function() {
    
    
   var mConstraint;
-  mConstraint = MouseConstraint.create(engine);
+  mConstraint = MouseConstraint.create(engine, { element: $('.vis-target')[0] });
   mConstraint.mouse.element.removeEventListener("mousewheel", mConstraint.mouse.mousewheel);
   mConstraint.mouse.element.removeEventListener("DOMMouseScroll", mConstraint.mouse.mousewheel);
-  
+   
   Matter.World.add(engine.world, mConstraint);
   var loading = null
   
@@ -337,7 +337,6 @@ $( document ).ready(function() {
       return;
     const bodies = Composite.allBodies(engine.world);  
     var foundPhysics = Matter.Query.point(bodies, event.mouse.position);
-
     if (foundPhysics[0]) {
       var active_mempool_id = body_id_to_mempool_id[foundPhysics[0].id]
       if (active_mempool_id) {
