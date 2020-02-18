@@ -170,6 +170,8 @@ $( document ).ready(function() {
   
   function updateLastBlockInfo() {
     const hash = bestBlockInfo.hash
+    if (bestBlockInfo == null)
+      return
     $('#block-hash').html(hash)
     const size = bestBlockInfo.strippedsize
     $('#size').html(Math.round(size/1024/1024*1000)/1000 + " MB")
