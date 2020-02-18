@@ -11,6 +11,8 @@ app.get('/', function (req, res) {
 });
 app.use(express.static('public'))
 
+var mempool_diff = {}
+
 app.get('/simulated_best_block_txs.json', function(req, res) {
   var out = []
   for (var id in mempool) {
@@ -19,6 +21,12 @@ app.get('/simulated_best_block_txs.json', function(req, res) {
     }
   }
   res.json({ tx: out, hash: Math.random() + chainInfo.bestblockhash })
+});
+app.get('/best_block_hash.json', function(req, res) {
+  //for (var id in mempool) {
+  //  out.push(mempool[id].wtxid)
+  //}
+  res.json({ hash: chainInfo.bestblockhash, })
 });
 app.get('/best_block_txs.json', function(req, res) {
   var out = []
@@ -32,6 +40,9 @@ app.get('/best_block_txs.json', function(req, res) {
 });
 app.get('/mempool.json', function(req, res) {
   res.json(mempool) 
+});
+app.get('/mempool-diff.json', function(req, res) {
+  res.json(mempool_diff) 
 });
 
 app.get('/main.js', function (req, res) {
@@ -75,6 +86,14 @@ function refreshMempool() {
       });
 
       res.on('end', function(){
+          const new_mempool = JSON.parse(body); 
+          var new_diff = {}
+          for (var key in new_mempool) { 
+            if (!(key in mempool))
+              new_diff[key] = new_mempool[key] 
+          }
+          if (Object.keys(new_diff).length > 0)
+            mempool_diff = new_diff
           mempool = JSON.parse(body);
           console.log("Updated mempool");
       });

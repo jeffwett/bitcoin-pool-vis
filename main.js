@@ -198,24 +198,28 @@ $( document ).ready(function() {
   }
 
   function removeConfirmedTransactions(initial) {
-    $.get("/best_block_txs.json", function(new_data, status){
+    $.get("/best_block_hash.json", function(new_data, status){
       if (new_data.hash != bestHash) {
-        console.log("BLOCK FOUND. checking new block against mempool")
-        bestHash = new_data.hash
-        console.log(new_data.tx.length)
-        bestBlockInfo = new_data.info
-        updateLastBlockInfo()
-        if (initial) {
-          return 
-        }
-        updateStatus("New block mined!")
-        new_data.tx.forEach( (tx) => {
-          removeFromMemPool(tx)
-        });
-      }
-      else {
-        updateLastBlockInfo()
-        console.log("No new block mined");
+        $.get("/best_block_txs.json", function(new_data, status){
+          if (new_data.hash != bestHash) {
+            console.log("BLOCK FOUND. checking new block against mempool")
+            bestHash = new_data.hash
+            console.log(new_data.tx.length)
+            bestBlockInfo = new_data.info
+            updateLastBlockInfo()
+            if (initial) {
+              return 
+            }
+            updateStatus("New block mined!")
+            new_data.tx.forEach( (tx) => {
+              removeFromMemPool(tx)
+            });
+          }
+          else {
+            updateLastBlockInfo()
+            console.log("No new block mined");
+          }
+        })
       }
     })
   }
@@ -373,7 +377,7 @@ $( document ).ready(function() {
 
   function refreshMemPool(initial) {
     console.log("Refreshing mempool")
-    $.get("mempool.json", function(data, status){
+    $.get(initial ? "mempool.json" : "mempool-diff.json", function(data, status){
       const mempool_keys = Object.keys(data)
       var toBeAdded = [];
       var newIds = []
