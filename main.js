@@ -110,7 +110,7 @@ $( document ).ready(function() {
       var tx_in_last_48_hours = (((new Date()).getTime() / 1000 - data.time)/60/60/48) < 1.0
       if (Math.random() < factor && tx_in_last_48_hours) { 
         mempool[key] = data
-        var size = Math.sqrt(data.vsize)*1.25
+        var size = Math.min(Math.sqrt(data.vsize)*1.25, dimWidth/2)
 				//var b= Bodies.circle(50 + 1.5*size + Math.floor(Math.random() * dimWidth - 100 - 1.5*size), (-1)*Common.random()*2000, size, { 
         var b= Bodies.rectangle(50 + 1.5*size + Math.floor(Math.random() * dimWidth - 100 - 1.5*size), (-1)*Common.random()*dimHeight/4, size,size, { 
           render: {
@@ -381,7 +381,7 @@ $( document ).ready(function() {
       var index;
       var newObject; 
       var totalCount = Object.keys(mempool).length == 0 ? mempool_keys.length : Object.keys(mempool).length
-      var p_display = Math.max(0.15, 0.10*( 1 + Math.log(dimHeight * dimWidth /(480*720))/Math.log(1.2)/10))
+      var p_display = Math.max(1/(mempool_keys.length+1),Math.min(0.15, 0.05*( 1 + Math.log(dimHeight * dimWidth /(480*720))/Math.log(1.2)/10)))
       console.log("P display value: " + p_display)
       var mempoolCount = 0
       for (index = 0; index < mempool_keys.length; index ++) {
@@ -401,7 +401,7 @@ $( document ).ready(function() {
     });
   }
 
-  setInterval(refreshMemPool, 15000)
+  setInterval(refreshMemPool, 10000)
   refreshMemPool(true)
 
 })
