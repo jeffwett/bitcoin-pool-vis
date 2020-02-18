@@ -161,7 +161,9 @@ $( document ).ready(function() {
   mConstraint = MouseConstraint.create(engine, { element: $('.vis-target')[0] });
   mConstraint.mouse.element.removeEventListener("mousewheel", mConstraint.mouse.mousewheel);
   mConstraint.mouse.element.removeEventListener("DOMMouseScroll", mConstraint.mouse.mousewheel);
-   
+  mConstraint.mouse.element.removeEventListener("touchmove", mConstraint.mouse.mousemove);
+  mConstraint.mouse.element.removeEventListener("touchstart", mConstraint.mouse.touchstart);
+  mConstraint.mouse.element.removeEventListener("mousemove", mConstraint.mouse.mousemove);
   Matter.World.add(engine.world, mConstraint);
   var loading = null
   
@@ -351,10 +353,21 @@ $( document ).ready(function() {
     initialY = event.mouse.position.y 
   });
  
+  $('.info-target').hide()
   //Add event with 'mousemove'
   Matter.Events.on(mConstraint, 'mouseup', function (event) {
     //For Matter.Query.point pass "array of bodies" and "mouse position"
     if (Math.abs(event.mouse.position.x - initialX) > 10 || Math.abs(event.mouse.position.y - initialY) > 10) { 
+      $('.info-target').hide()
+      active_mempool_id = null
+      var currentY = event.mouse.mousedownPosition.y;
+      var deltaY2 = currentY - event.mouse.mouseupPosition.y;
+      window.scrollTo(0, deltaY2 + $('body')[0].scrollTop)
+      return
+    }
+    if (!$('.info-target:hidden')[0]) {
+      $('.info-target').hide()
+      return
     }
     const bodies = Composite.allBodies(engine.world);  
     var foundPhysics = Matter.Query.point(bodies, event.mouse.position);
