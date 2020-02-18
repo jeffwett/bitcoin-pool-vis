@@ -337,8 +337,8 @@ $( document ).ready(function() {
   //Add event with 'mousemove'
   Matter.Events.on(mConstraint, 'mouseup', function (event) {
     //For Matter.Query.point pass "array of bodies" and "mouse position"
-    if (Math.abs(event.mouse.position.x - initialX) > 10 || Math.abs(event.mouse.position.y - initialY) > 10)  
-      return;
+    if (Math.abs(event.mouse.position.x - initialX) > 10 || Math.abs(event.mouse.position.y - initialY) > 10) { 
+    }
     const bodies = Composite.allBodies(engine.world);  
     var foundPhysics = Matter.Query.point(bodies, event.mouse.position);
     if (foundPhysics[0]) {
@@ -356,6 +356,9 @@ $( document ).ready(function() {
     }
     else {
       $('.info-target').hide()
+      var currentY = event.mouse.mousedownPosition.y;
+      var deltaY2 = currentY - event.mouse.mouseupPosition.y;
+      window.scrollTo(0, deltaY2 + $('body')[0].scrollTop)
     }
   });
   
